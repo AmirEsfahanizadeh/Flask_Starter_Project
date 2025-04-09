@@ -15,9 +15,9 @@ def login():
     password = data.get('password')
 
     user = User.query.filter_by(username=username).first()
-    print("User:", user.username if user else "None")
-    print("Password:", password)
-    print(user.check_password(password) if user else "None")
+    # print("User:", user.username if user else "None")
+    # print("Password:", password)
+    # print(user.check_password(password) if user else "None")
     if user and user.check_password(password):
         token = jwt.encode({
             'user_id': user.id,

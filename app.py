@@ -11,10 +11,10 @@ db.init_app(app)
 app.register_blueprint(auth_bp)
 
 
-with app.app_context():
-    users = db.session.query(User).all()
-    for user in users:
-        print(f"User name: {user.username}, pass: {user.password_hash}")
+# with app.app_context():
+#     users = db.session.query(User).all()
+#     for user in users:
+#         print(f"User name: {user.username}, pass: {user.password_hash}")
 
 # with app.app_context():
 #     db.create_all()  # Creates the user table if it doesn't exist
