@@ -1,7 +1,9 @@
 from flask import Flask
 from extensions import db
-from models import User
-from auth import auth_bp
+from models import User, Post, Comment
+from auth import auth_bp, post_bp, comment_bp
+from flask_migrate import Migrate
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -9,21 +11,22 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 app.register_blueprint(auth_bp)
+app.register_blueprint(post_bp)
+app.register_blueprint(comment_bp)
+migrate = Migrate(app, db)
 
+with app.app_context():
 
-# with app.app_context():
-#     users = db.session.query(User).all()
-#     for user in users:
-#         print(f"User name: {user.username}, pass: {user.password_hash}")
+    comments = db.session.query(Comment).all()
 
-# with app.app_context():
-#     db.create_all()  # Creates the user table if it doesn't exist
+    for comment in comments:
+        print(f"comment ID: {comment.id}, user: {comment.user_id}, post: {comment.post_id}")
+        user = User.query.filter_by(id=comment.user_id).first()
+        print(f"User ID: {user.id}, Username: {user.username}")
 
-#     # Create a user record
-#     user = User(username="manager")
-#     user.set_password("manager123")
-#     db.session.add(user)
-#     db.session.commit()
+        post = Post.query.filter_by(id=comment.post_id).first()
+        print(f"Post ID: {post.id}, Title: {post.title}")
+        print("post booood" if post else "post not found")
 
 if __name__ == '__main__':
     app.run(debug=True)
